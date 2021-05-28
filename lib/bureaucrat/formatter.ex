@@ -4,13 +4,20 @@ defmodule Bureaucrat.Formatter do
   def init(_config) do
     {:ok, nil}
   end
+  
+  def handle_cast({:suite_finished, _time_us}, nil) do
+    env_var = Application.get_env(:bureaucrat, :env_var)
+    if System.get_env(env_var), do: generate_docs()
 
+    {:noreply, nil}
+  end
   def handle_cast({:suite_finished, _run_us, _load_us}, nil) do
     env_var = Application.get_env(:bureaucrat, :env_var)
     if System.get_env(env_var), do: generate_docs()
 
     {:noreply, nil}
   end
+
 
   def handle_cast(_event, nil) do
     {:noreply, nil}
